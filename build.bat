@@ -1,23 +1,23 @@
 @echo off
 setlocal
 
-REM 동일 작업을 한 줄로 실행하려면 (패키지 설치는 별도로 완료된 상태여야 함):
+REM One-line equivalent (run after dependencies are installed):
 REM pyinstaller --onefile --windowed --noconfirm --name PPTX2Markdown --collect-all tkinterdnd2 app.py
 
-echo [1/2] 필요한 패키지를 설치합니다...
+echo [1/2] Installing required packages...
 pip install -r requirements.txt
 if errorlevel 1 goto :error
 
-echo [2/2] PyInstaller로 단일 실행 파일(.exe)을 빌드합니다...
+echo [2/2] Building single-file executable with PyInstaller...
 pyinstaller --onefile --windowed --noconfirm --name PPTX2Markdown --collect-all tkinterdnd2 app.py
 if errorlevel 1 goto :error
 
 echo.
-echo 빌드 완료: dist\PPTX2Markdown.exe
+echo Build complete: dist\PPTX2Markdown.exe
 pause
 goto :eof
 
 :error
 echo.
-echo 빌드 중 오류가 발생했습니다.
+echo Build failed. See the output above for details.
 pause
