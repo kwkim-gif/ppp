@@ -1,6 +1,12 @@
 @echo off
 setlocal
 
+REM Always run from the folder this script lives in, regardless of the
+REM directory (or drive) the user launched it from. Without this,
+REM relative paths like requirements.txt fail, and cmd's call/goto
+REM label lookup can also misbehave when run from a different drive.
+cd /d "%~dp0"
+
 REM One-line equivalent (run once Python + dependencies are already set up):
 REM python -m PyInstaller --onefile --windowed --noconfirm --name PPTX2Markdown --collect-all tkinterdnd2 app.py
 
