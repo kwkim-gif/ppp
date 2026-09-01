@@ -1,0 +1,4 @@
+python-pptx>=0.6.23
+customtkinter>=5.2.2
+tkinterdnd2>=0.3.0
+pyinstaller>=6.3.0
