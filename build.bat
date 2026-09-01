@@ -50,13 +50,16 @@ pause
 goto :eof
 
 REM ---------------------------------------------------------------
-REM Looks for a real python.exe (never a .bat/.cmd shim): first on
-REM PATH, then in the usual per-user and system install locations.
-REM Sets PYTHON_EXE to a full path (empty if nothing was found).
+REM Looks for a real python.exe (never a .bat/.cmd shim, and never
+REM the Microsoft Store "app execution alias" stub that Windows puts
+REM on PATH at %LocalAppData%\Microsoft\WindowsApps\python.exe even
+REM when Python isn't actually installed): first on PATH, then in
+REM the usual per-user and system install locations. Sets PYTHON_EXE
+REM to a full path (empty if nothing usable was found).
 REM ---------------------------------------------------------------
 :find_python
 set "PYTHON_EXE="
-for /f "delims=" %%P in ('where python.exe 2^>nul') do set "PYTHON_EXE=%%P"
+for /f "delims=" %%P in ('where python.exe 2^>nul ^| findstr /I /V "WindowsApps"') do set "PYTHON_EXE=%%P"
 if not "%PYTHON_EXE%"=="" goto :eof
 
 if exist "%LocalAppData%\Programs\Python\Python313\python.exe" set "PYTHON_EXE=%LocalAppData%\Programs\Python\Python313\python.exe"
@@ -80,7 +83,7 @@ if errorlevel 1 goto :install_download
 echo Trying winget install of Python %PYTHON_INSTALL_VERSION%...
 winget install -e --id Python.Python.3.12 --silent --accept-source-agreements --accept-package-agreements
 call :refresh_path
-where python.exe >nul 2>nul
+where python.exe 2>nul | findstr /I /V "WindowsApps" >nul
 if not errorlevel 1 goto :eof
 
 :install_download
